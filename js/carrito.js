@@ -14,12 +14,12 @@ function carritoModal() {
     modalEncabezado.className = ('encabezado')
     modalEncabezado.innerHTML = `
     <h1 class="encabezado-titulo"> Carrito </h1>
-    <img class="menu-img" src="../assets/logo.png">
-    <button class = "cierre-boton" > x </i> </button>
+    <img class="carrito-logo" src="./assets/logo.png">
+    <p class = "cierre-boton" > x </i> </p>
     `
     conteinerCarrito.append(modalEncabezado)
 
-    //luego el boton de cierre
+    //boton de cierre
 
     let cierreCarrito = modalEncabezado.querySelector('.cierre-boton')
     cierreCarrito.onclick = (e) => {
@@ -32,14 +32,16 @@ function carritoModal() {
 
     for (const product of carrito) {
 
-        let carritoProductos = document.createElement('div')  // no pongo const por que va ir variando el contenido
+        let carritoProductos = document.createElement('div')
         carritoProductos.className = ('carrito-productos')
         carritoProductos.innerHTML = `
            <p class="carrito-nombre"> ${product.nombre} </p>
            <p class="carrito-precio"> $${product.precio} </p>
-           <span class="restar-cantidad"> - </span>
-           <p> Cantidad: ${product.cantidad} </p>  
-           <span class="sumar-cantidad"> + </span>
+           <div class="conteiner-cantidad">
+             <span class="restar-cantidad"> - </span>
+             <p> Cantidad: ${product.cantidad} </p>  
+             <span class="sumar-cantidad"> + </span>
+           </div>
            <p> Total: $ ${product.cantidad * product.precio} </p>
            <span class="boton-eliminar"> Eliminar </span>
 
@@ -50,7 +52,6 @@ function carritoModal() {
         // RESTAR
         let restarCantidad = carritoProductos.querySelector('.restar-cantidad')
         restarCantidad.addEventListener('click', () => {
-            console.log('funciona')
             if (product.cantidad !== 1) {
                 product.cantidad--
             }
@@ -74,7 +75,7 @@ function carritoModal() {
     }
 
     // TOTAL
-   
+
     const total = carrito.reduce((acumulador, el) => acumulador + el.precio * el.cantidad, 0)
 
     // FOOTER-CARRITO
@@ -83,9 +84,18 @@ function carritoModal() {
     totalCarrito.className = ('total-carrito')
     totalCarrito.innerHTML = `
     <p class = "total-titulo"> Total: $ ${total} </p>
-    <p> Vaciar Carrito </p>
+    <p id= "vaciar-carrito"> Vaciar Carrito </p>
     `
     conteinerCarrito.append(totalCarrito);
+
+    // vaciar carrito -- NO ME FUNCIONA
+    
+    let vaciarCarrito = totalCarrito.querySelector('#vaciar-carrito')
+    vaciarCarrito.addEventListener('click', ()=> {
+        carritoProductos.innerHTML = ''
+        reiniciarCarrito()
+        console.log('click') // el click me funciona asi que el problema es que no se me vacia el carrito
+    })
 }
 
 // hago un evento onlick para la funcion
@@ -104,5 +114,7 @@ const eliminarProductos = (id) => {
     carritoModal();
 };
 
-
-// me faltaria hacer VACIAR CARRITO y luego aplicar localstoraje para que se guarde el cambio
+//NO ME FUNCIONA
+function reiniciarCarrito(){
+    localStorage.removeItem('menu')
+}

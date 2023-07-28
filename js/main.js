@@ -2,13 +2,14 @@ const contenedorTarjetas = document.getElementById('productos-conteiner')
 const verCarrito = document.getElementById('shopping')
 const conteinerCarrito = document.getElementById('conteiner-carrito')
 
+
 // ciclo el arrey producto para subir los productos
 for (const product of productos) { 
     //genero la estructura
     const tarjetas = document.createElement('div')
     tarjetas.className = 'tarjeta-producto'
     tarjetas.innerHTML = `
-             <img class="menu-img" src="${product.img}" alt="">
+             <img class="menu-img" src="./img/${product.img}" alt="">
              <p class="menu-title">${product.nombre}</p>
              <p class="ingredientes">${product.descripcion}</p>
              <p class="price">$${product.precio} </p>
@@ -40,10 +41,5 @@ for (const product of productos) {
             })
             localStorage.setItem('menu', JSON.stringify(carrito))  // aca pongo el local storage asi se guarde lo que modifico
         }
-        console.log(carrito) // si se modifica las cantidades
     })
 };
-
-
-
-
