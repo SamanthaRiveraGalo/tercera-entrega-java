@@ -72,6 +72,7 @@ function carritoModal() {
         eliminar.addEventListener('click', () => {
             eliminarProductos(product.id)
         })
+
     }
 
     // TOTAL
@@ -84,18 +85,21 @@ function carritoModal() {
     totalCarrito.className = ('total-carrito')
     totalCarrito.innerHTML = `
     <p class = "total-titulo"> Total: $ ${total} </p>
-    <p id= "vaciar-carrito"> Vaciar Carrito </p>
+    <div class="vaciar-comprar"> 
+      <p id="vaciar-carrito"> Vaciar Carrito </p>
+      <button id="comprar">Comprar</button>
+    </div>
     `
     conteinerCarrito.append(totalCarrito);
 
     // vaciar carrito -- NO ME FUNCIONA
-    
+
     let vaciarCarrito = totalCarrito.querySelector('#vaciar-carrito')
-    vaciarCarrito.addEventListener('click', ()=> {
-        carritoProductos.innerHTML = ''
-        reiniciarCarrito()
-        console.log('click') // el click me funciona asi que el problema es que no se me vacia el carrito
+    vaciarCarrito.addEventListener('click', () => {
+        carritoProductos.innerHTML = ''    //tendria que vaciar el html
+        reiniciarCarrito()        // funciona el click funciona el borrar carrito pero no se me cambia el html
     })
+
 }
 
 // hago un evento onlick para la funcion
@@ -114,7 +118,7 @@ const eliminarProductos = (id) => {
     carritoModal();
 };
 
-//NO ME FUNCIONA
-function reiniciarCarrito(){
-    localStorage.removeItem('menu')
+
+function reiniciarCarrito() {
+    localStorage.removeItem('menu')  // elimina el localstorage
 }
