@@ -4,7 +4,7 @@ const conteinerCarrito = document.getElementById('conteiner-carrito')
 
 
 // ciclo el arrey producto para subir los productos
-for (const product of productos) { 
+for (const product of productos) {
     //genero la estructura
     const tarjetas = document.createElement('div')
     tarjetas.className = 'tarjeta-producto'
@@ -23,13 +23,19 @@ for (const product of productos) {
     let agregarAlCarrito = tarjetas.querySelector('.menu-boton')
     agregarAlCarrito.addEventListener('click', () => {
 
+        //toastify
+        Toastify({
+            text: "Se agrego al Carrito!",
+            duration: 1000
+        }).showToast();
+
         // para que no se repitan los productos en el carrit
         const repetir = carrito.some((repetirProducto) => repetirProducto.id === product.id)
 
         if (repetir) {
             carrito.map((prod) => {
                 if (prod.id === product.id) {
-                    prod.cantidad ++
+                    prod.cantidad++
                 }
             })
         } else {

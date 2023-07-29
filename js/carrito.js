@@ -92,15 +92,28 @@ function carritoModal() {
     `
     conteinerCarrito.append(totalCarrito);
 
+    
+    //sweetAlert
+    
+    let comprar = totalCarrito.querySelector('#comprar')
+    comprar.onclick = ()=>{
+        swal({
+            text: 'Su compra fue exitosa',
+            icon: 'success',
+        });
+
+        // ACA TENDRIA QUE VACIARSE EL CARRITO Y EL HTML
+    }
+    
     // vaciar carrito -- NO ME FUNCIONA
 
     let vaciarCarrito = totalCarrito.querySelector('#vaciar-carrito')
     vaciarCarrito.addEventListener('click', () => {
-        carritoProductos.innerHTML = ''    //tendria que vaciar el html
         reiniciarCarrito()        // funciona el click funciona el borrar carrito pero no se me cambia el html
     })
 
 }
+
 
 // hago un evento onlick para la funcion
 
