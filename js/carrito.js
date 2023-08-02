@@ -1,10 +1,16 @@
+// evento click para el modal
+
+verCarrito.addEventListener('click', carritoModal);
+
+
+
 function carritoModal() {
 
-    // esto es para limpiar todo y no se repita 20 veces el carrito cada vez que le hago click
+    // para limpiar todo
     conteinerCarrito.innerHTML = '';
 
     // para que cuando aprete de nuevo el carrito lo pueda ver 
-    conteinerCarrito.style.display = 'flex'
+    conteinerCarrito.style.display = 'grid'
 
     // Estructura del carrito
 
@@ -28,7 +34,7 @@ function carritoModal() {
 
     modalEncabezado.append(cierreCarrito)
 
-    //BODY-CARRITO - el for para que cicle cada producto
+    //BODY-CARRITO
 
     for (const product of carrito) {
 
@@ -39,7 +45,7 @@ function carritoModal() {
            <p class="carrito-precio"> $${product.precio} </p>
            <div class="conteiner-cantidad">
              <span class="restar-cantidad"> - </span>
-             <p> Cantidad: ${product.cantidad} </p>  
+             <p> ${product.cantidad} </p>  
              <span class="sumar-cantidad"> + </span>
            </div>
            <p> Total: $ ${product.cantidad * product.precio} </p>
@@ -48,7 +54,16 @@ function carritoModal() {
      `
         conteinerCarrito.append(carritoProductos)
 
-        // queryselector nos permite seleccionar la clase restar-cantidad de carritoProductos que es nuestro body del carrito
+        // FUNCIONES
+
+        //SUMAR
+        let sumarCantidad = carritoProductos.querySelector('.sumar-cantidad')
+        sumarCantidad.addEventListener('click', () => {
+            product.cantidad++
+            localStorage.setItem('menu', JSON.stringify(carrito))   // guarde los cambios
+            carritoModal()
+        })
+
         // RESTAR
         let restarCantidad = carritoProductos.querySelector('.restar-cantidad')
         restarCantidad.addEventListener('click', () => {
@@ -59,15 +74,7 @@ function carritoModal() {
             carritoModal()
         })
 
-        //SUMAR
-        let sumarCantidad = carritoProductos.querySelector('.sumar-cantidad')
-        sumarCantidad.addEventListener('click', () => {
-            product.cantidad++
-            localStorage.setItem('menu', JSON.stringify(carrito))   // guarde los cambios
-            carritoModal()
-        })
-
-        // ELIMINAR
+        // ELIMINAR CADA PRODUCTO
         let eliminar = carritoProductos.querySelector('.boton-eliminar')
         eliminar.addEventListener('click', () => {
             eliminarProductos(product.id)
@@ -84,42 +91,40 @@ function carritoModal() {
     const totalCarrito = document.createElement('div')
     totalCarrito.className = ('total-carrito')
     totalCarrito.innerHTML = `
-    <p class = "total-titulo"> Total: $ ${total} </p>
+    <p class = "total-titulo"> Precio Total: $ ${total} </p>
     <div class="vaciar-comprar"> 
       <p id="vaciar-carrito"> Vaciar Carrito </p>
       <button id="comprar">Comprar</button>
     </div>
     `
     conteinerCarrito.append(totalCarrito);
-
     
     //sweetAlert
     
     let comprar = totalCarrito.querySelector('#comprar')
-    comprar.onclick = ()=>{
+    comprar.onclick = () => {
         swal({
             text: 'Su compra fue exitosa',
             icon: 'success',
         });
-
-        // ACA TENDRIA QUE VACIARSE EL CARRITO Y EL HTML
     }
-    
-    // vaciar carrito -- NO ME FUNCIONA
 
-    let vaciarCarrito = totalCarrito.querySelector('#vaciar-carrito')
+    // VACIAR CARRITO
+    const vaciarCarrito = document.getElementById('vaciar-carrito')
     vaciarCarrito.addEventListener('click', () => {
+        carritoProductos.innerHTML = '';
         reiniciarCarrito()        // funciona el click funciona el borrar carrito pero no se me cambia el html
     })
 
 }
 
+// VACIAR CARRITO
+function reiniciarCarrito() {
+    localStorage.removeItem('menu')  // elimina el localstorage
+}
 
-// hago un evento onlick para la funcion
 
-verCarrito.addEventListener('click', carritoModal);
-
-// ahora tiene que eliminar el producto cuando le haga click y lo voy a eliminar por medio del ID
+// Eliminar el producto por ID
 const eliminarProductos = (id) => {
     const encontrarId = carrito.find((el) => el.id === id);
 
@@ -130,8 +135,3 @@ const eliminarProductos = (id) => {
     localStorage.setItem('menu', JSON.stringify(carrito));
     carritoModal();
 };
-
-
-function reiniciarCarrito() {
-    localStorage.removeItem('menu')  // elimina el localstorage
-}

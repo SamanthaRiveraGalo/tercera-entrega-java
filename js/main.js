@@ -2,50 +2,63 @@ const contenedorTarjetas = document.getElementById('productos-conteiner')
 const verCarrito = document.getElementById('shopping')
 const conteinerCarrito = document.getElementById('conteiner-carrito')
 
+let carrito = JSON.parse(localStorage.getItem('menu')) || [];
 
-// ciclo el arrey producto para subir los productos
-for (const product of productos) {
-    //genero la estructura
-    const tarjetas = document.createElement('div')
-    tarjetas.className = 'tarjeta-producto'
-    tarjetas.innerHTML = `
-             <img class="menu-img" src="./img/${product.img}" alt="">
-             <p class="menu-title">${product.nombre}</p>
-             <p class="ingredientes">${product.descripcion}</p>
-             <p class="price">$${product.precio} </p>
-             <button class = "menu-boton"> Agregar al Carrito </button>
-            `
+const baseDeDatos = async () => {
 
-    contenedorTarjetas.appendChild(tarjetas)
+    const respuesta = await fetch("./datos/datos.json")
+    const datosProductos = await respuesta.json()
 
-    // AGREGAR AL CARRITO - FUNCION
+    console.log(datosProductos)
 
-    let agregarAlCarrito = tarjetas.querySelector('.menu-boton')
-    agregarAlCarrito.addEventListener('click', () => {
+    for (const product of datosProductos) {
+        //genero la estructura
+        const tarjetas = document.createElement('div')
+        tarjetas.className = 'tarjeta-producto'
+        tarjetas.innerHTML = `
+                 <img class="menu-img" src="./img/${product.img}" alt="">
+                 <p class="menu-title">${product.nombre}</p>
+                 <p class="ingredientes">${product.descripcion}</p>
+                 <p class="price">$${product.precio} </p>
+                 <button class = "menu-boton"> Agregar al Carrito </button>
+                `
 
-        //toastify
-        Toastify({
-            text: "Se agrego al Carrito!",
-            duration: 1000
-        }).showToast();
+        contenedorTarjetas.appendChild(tarjetas)
 
-        // para que no se repitan los productos en el carrit
-        const repetir = carrito.some((repetirProducto) => repetirProducto.id === product.id)
+        // AGREGAR AL CARRITO - FUNCION
 
-        if (repetir) {
-            carrito.map((prod) => {
-                if (prod.id === product.id) {
-                    prod.cantidad++
+        function agregarCarrito() {
+            let agregarAlCarrito = tarjetas.querySelector('.menu-boton')
+            agregarAlCarrito.addEventListener('click', () => {
+
+                //toastify
+                Toastify({
+                    text: "Se agrego al Carrito!",
+                    duration: 1000
+                }).showToast();
+
+                // para que no se repitan los productos en el carrito
+
+                const repetir = carrito.some((repetirProducto) => repetirProducto.id === product.id)
+
+                if (repetir) {
+                    carrito.map((prod) => {
+                        if (prod.id === product.id) {
+                            prod.cantidad++
+                        }
+                    })
+                } else {
+                    carrito.push({
+                        id: product.id,
+                        nombre: product.nombre,
+                        precio: product.precio,
+                        cantidad: product.cantidad,
+                    })
+                    localStorage.setItem('menu', JSON.stringify(carrito))  // guardo lo que modifico
                 }
             })
-        } else {
-            carrito.push({
-                id: product.id,
-                nombre: product.nombre,
-                precio: product.precio,
-                cantidad: product.cantidad,
-            })
-            localStorage.setItem('menu', JSON.stringify(carrito))  // aca pongo el local storage asi se guarde lo que modifico
         }
-    })
-};
+        agregarCarrito()
+    }
+}
+baseDeDatos()
